@@ -175,51 +175,33 @@
 \begin{document}
 
 
-% \maketitle
+\maketitle
 
 \input{01.INTRO/intro.tex}
-% \input{INTRO/stateofart.tex}
-% \input{LPWAN/lpwan.tex}
-% \input{DSP/dsp.tex}
 \input{URS/urs.tex}
 \input{02.HW/hw.tex}
 \input{SW_Firmware/sw_firmware.tex}
-% \input{Experiment/experiment.tex}
-% \input{Conclusion/conclusion.tex}
+\input{SW_Application/sw_application.tex}
+\input{Conclusion/conclusion.tex}
 
 
 \appendix
 % \printindex
 
-% \chapter{Additional Picture, Schemes, Charts}
-%     \begin{figure} [!h]
-%     	    \centering
-%     	    \includegraphics[ width =1.15\textwidth]{HW_PART/Figs/KICKAD/node.pdf}
-%             \caption {Schéma zapojení monitorovací jednotky.}
-%             \label{figure:scheme_01}
-%     \end{figure} 
+\chapter{Additional Figures, Schemes \& Charts}
+    \begin{sidewaysfigure}
+        \centering
+        \includegraphics[page=2,width =\textwidth]{Appendix/BT_LED_CTRL-1.0-sch.pdf}
+        \caption {The HW design of light control unit board (created by Pavel Porazil)}
+        \label{figure:hw_lcu}
+    \end{sidewaysfigure}
     
-%     \begin{figure} [!h]
-%     \label{figure:nodered_graphs}
-%     	    \centering
-%     	    \includegraphics[ width =1.2 \textwidth]{SW_PART/Figs/Node-RED/node_red_graphs_code.png}
-%             \caption {Node-RED flowchartový program pro obsluhu grafů.}
-%     \end{figure} 
-    
-%     \begin{sidewaysfigure}
-%         \centering
-%         \includegraphics[ width =\textwidth]{SW_PART/Figs/Node-RED/node_red_config_code.png}
-%         \caption {Node-RED flowchartový program pro obsluhu konfigurace.}
-%         \label{figure:nodered_graphs2}
-%     \end{sidewaysfigure}
-
-
-%     \begin{figure}[!ht]
-%         \centering
-% 	    \includegraphics[width =0.7\textwidth]{SW_PART/Figs/radio_packets.pdf}
-%         \caption {Přehled rádiových paketů použitých v aplikaci.}
-%         \label{figure:radio_packets}
-%     \end{figure} 
+    \begin{sidewaysfigure}
+        \centering
+        \includegraphics[page=1,width =\textwidth]{Appendix/BT_LED_CTRL-1.0-sch.pdf}
+        \caption {The HW design of light control unit board (created by Pavel Porazil)}
+        \label{figure:hw_lcu2}
+    \end{sidewaysfigure}
 
 %\appendix
 \chapter*{List of Shortcuts}
@@ -281,7 +263,7 @@ GATT & Generic ATTribute profile\\
 
 
 \printbibliography[keyword=primary, title=Bibliography]
-\printbibliography[keyword=image, title=Online Images]
+\printbibliography[keyword=image, title=Sources - Images]
 
 % \bibliographystyle{siam}
 % \bibliography{ctutest}
