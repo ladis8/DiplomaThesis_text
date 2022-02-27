@@ -1,0 +1,144 @@
+%!TEX ROOT=ctutest.tex
+
+\chapter{Komunikační řetězec – IoT aplikace}
+\question{Popis komunikačního řetězce v teoretickém úvodu?}
+\answer{V BP může být v teor. části obecnější popis = bez konkrétních součástek, nastavení apod., v části Realizace pak navázat popisem konkrétní implementace - součástky, nastavení, atd. }
+
+
+\section{LoRa Node}
+    LoRa Node je koncové zařízení, které komunikuje se senzory, zpracovává naměřená data a odesílá je v podobě LoRa paketů do LoRa brány.
+
+\subsection{Výběr komponent}
+
+\subsubsection{Mikrokontrolér (MCU) – STM32L0RZ73 }
+
+    Výběr výpočetní jednotky byl ovlivněn zejména dvěma požadavky – dostatečným výpočetním výkonem, který je třeba pro zpracování signálu z akcelerometru, a nízkou spotřebou. Tyto požadavky jdou ovšem zcela proti sobě, a nakonec byl tak jako kompromis použit procesor z „low power“ série mikrokontrolérů od firmy STM – STM32L0RZ73. 
+    
+    \question{Doplnit o specifikaci MCU??}
+    
+\answer{Ano, v BP udělat přehled relevantních parametrů a architektury}
+
+\subsubsection{LoRa modul – I-NUCLEO-SX1272D}
+    $\text{LoRa}^{\text{TM}}$ je uzavřená technologie, kterou licencuje a vyvíjí firma SemTech. Všechny čipy podporující tuto modulaci nesou označení SX127x. Na trhu se nachází nepřeberné množství LoRa modulů, které se liší především výstupním výkonem, komunikačním rozhraním a cenou.
+    
+    Protože jsem chtěl vytvořit vlastní LoRa bránu a nevyužívat oficiální brány, bylo třeba použít pouze LoRa modul a nikoliv LoRaWAN modul, který má v sobě implementovaný LoRaWAN protokol a slouží právě pro komunikaci s oficiálními branami. K tomuto účlu posloužil LoRa modul s čipem SX1272 přímo od společnosti ST, který byl součástí vývojářského kitu, který jsem dostal a který lze zapojit přímo do Nuclea.
+    
+    
+    %\href{https://www.st.com/en/evaluation-tools/i-nucleo-sx1272d.html}{Source}
+
+
+
+
+\subsubsection{Teplotní senzor – TMP75}
+
+    TMP75 je digitální teplotní čidlo od firmy Texas Instruments, které pro měření využívá 12bitový převodník. Jedná se o poměrně rozšířený senzor komunikující po I2C sběrnici, který je díky své malé spotřebě vhodný zejména do zařízení, které jsou poháněny baterií.
+    
+    \question{Doplnit o specifikaci senzorů??}
+
+\subsubsection{Senzor vibrací – ADXL1001}
+
+    \todo{!!!Podle čeho vybrat akcelerometr do naší aplikace???}
+    
+    \answer{rozsah, noise floor u analogového/ rozlišení u digitálního, šířka pásma/vzorkovací frekvence}
+
+
+
+
+\subsection{Návrh zapojení}
+
+    Zapojení LoRa Node je vyřešeno za pomocí vývojářského kitu NUCLEO a nepájivého pole, do kterého jsou připojeny senzory. Jedná se zatím pouze o první verzi pro testovací účely. Oba dva senzory jsou napájeny z Nuclea a fungují na 3.3 V logice. K senzorům jsou přidány kondenzátory pro blokování napájení. Výsledné zapojení lze vidět na obrázku...
+    
+    \todo{!!!Doplnit Schéma zapojení}
+    
+    \todo{!!!Doplnit foto}
+
+
+\subsection{Softwarové nástroje}
+
+    Softwarový vývoj postavený na platformě ST může probíhat několika odlišnými způsoby. Lze využívat knihovnu obsahující pouze registry procesoru – CMSIS, nízkoúrovňovou knihovnu LL (Low Level) nebo již komplexní knihovny HAL (Hardware Abstraction Layer). V této práci byla použita kombinace všech tří přístupů. Obsluha komunikace MCU přes UART byla například naprogramována pouze pomocí CMSIS, obsluha AD převodníku pomocí LL a obsluha I2C pomocí HAL.
+    
+    \question{Mělo by to byt všechno unifikované???}
+    
+    \answer{Nemusí být, pokud je to zdůvodnitelné - např. někde něco chybí}
+
+\subsection{Funkčnost LoRa Node}
+
+    Průběh programu je následující. Po restartování MCU dojde k inicializaci periferií a příslušné nastavení GPIO pinů. V dalším kroku dochází ke čtení hodnot ze senzorů, jejich naformátování a vytvoření zprávy, která je odeslána prostřednictvím LoRa modulu. 
+    Po odeslání paketu přechází zařízení do SLEEP módu, ze kterého je po 30 sekundách pomocí RTC obvodu probuzeno a dochází opět k dalšímu čtení dat ze senzorů a odeslání zprávy.
+
+\subsection{Způsob komunikace – formát odeslaných dat}
+
+    \todo{!!!Vymyslet přesně daný formát zprávy}
+
+
+
+
+\section{LoRa brána}
+
+    \todo{Otestovat dosah brány}
+    
+    \todo{Změřit spotřebu a propustnost}
+    
+
+    Brána (Gateway) slouží jako prostředník mezi jednotlivými koncovými zařízeními (LoRa Nodes) a cloudovou službou. Její hlavní funkcí je tedy příjem LoRa paketů a jejich přeposílání přes IP protokol do cloudu.
+
+\subsection{Výběr komponent}
+    
+    \subsubsection{Mikrokontrolér – Raspberry Pi}
+        Vlastní LoRa brána může být postavena spíše minimalisticky za použití určitého mikrokontroléru, tedy se slabým výkonem, ale nízkou cenou a spotřebou – například jako další STM32 jednotka s ethernet nebo WiFi modulem nebo pomocí oblíbeného vývojářského čipu ESP8266/ESP32. 
+        Opačný přístup by bylo postavení brány s výpočetně silnějším počítačem a operačním systémem, tedy s velkým výkonem, ale vyšší cenou a spotřebou.
+
+        Pro realizaci brány bylo nakonec použité \textbf{Raspberry Pi}, konkrétně verze 3 model B s operačním systémem Raspbian. 
+        Motivací výběru Raspberry po zvážení kritérií popsaných výše byl zejména dostatečný výpočetní výkon, vývojářská podpora a výhody operačního systému. Spotřeba brány není tak důležité kritérium jako u koncových zařízení, protože brána může mít stálý zdroj napájení. Raspberry byl tedy jakýsi kompromis mezi výkonem a cennou. Další plus, které toto řešení nabízí je veliká univerzálnost – na RPi lze naprogramovat mnoho aplikací, které by přizpůsobily chování celého systému podle konkrétních požadavků zákazníka (například lokální záloha dat z LoRa Nodes, pouze lokální řešení bez cloudové služby \ldots).
+        
+        \question{Doplnit o technické parametry Raspberry?}
+        
+        \answer{pouze ty podstatné}
+        
+    \subsubsection{LoRa modul – I-NUCLEO-SX1272D}
+
+        Pro komunikaci s koncovými zařízeními byl využit stejný LoRa modul jako pro koncová zařízení – \textbf{I-NUCLEO-SX1272D}.
+
+        Bohužel tento modul je určený pro vývojovou desku Nucleo, čemuž odpovídá i jiná DPS, a proto bylo třeba propojit GPIO piny Raspberry a modulu drátky. V další verzi by bylo určitě vhodné vytvořit desku s LoRa modulem, která by přímo seděla na rozměry Raspberry a nemusela se tak propojovat.
+        
+    \subsubsection{LCD displej – LCD 1602A}
+        I když lze stav všech koncových LoRa Nodes lze kontrolovat přes síť The Things Network, je vhodné použít nějaký „offline“ způsob indikace stavu celého systému, a proto byl k Raspberry připojen LED displej s posuvným registrem, který zobrazuje informace o připojených LoRa Nodes. Samotnému výběru displeje jsem nevěnoval příliš pozornost, protože se jednalo pouze o dodatečnou funkcionalitu.
+        
+\subsection{Návrh zapojení}
+
+        Výsledné zařízení lze vidět na obrázku...
+    
+        \todo{Vytvořit obrázek zapojení}
+        
+\subsection{Softwarové nástroje}
+
+    Proti řešení brány pouze s mikrokontrolérem je u malého linuxového počítače velkou výhodou možnost využití skriptovacího programovacího jazyka Python, který díky mnoha knihovnám usnadňuje práci vývojáři a který byl také použit pro naprogramování brány.
+
+    Pro obsluhu GPIO pinů a periferií Raspberry jako SPI a UART byla využita knihovna \textit{wiringpi}. Samotná komunikace Raspberry a LoRa modulu probíhala přes SPI komunikaci zápisem a čtením jednotlivých registrů čipu. 
+    Pro komunikaci s cloudovou službou The Things Network byla využita knihovna \textit{socket}, který umožňuje přístup k linuxovému rozhraní BSD soket.
+
+
+
+\subsection{Způsob komunikace}
+    Po počáteční inicializaci brána čeká v módu SLEEP na přijetí LoRa paketu. Přijetí paketu je doprovázeno zablikáním indikační LED diody a aktualizací údajů na displeji. Dále brána dekóduje zprávu a zkontroluje CRC. 
+    
+    \question{Doplnit o popis CRC???}
+    
+    \textit{CRC (Cyclic Redundancy Check) je algoritmus...}
+    
+    \answer{stačilo by jen napsat, který polynom používáte}
+
+    V případě, že CRC nesouhlasí je daný paket zahozen, nebyly implementovány žádné ARQ algoritmy pro  opakované odeslání chybných dat. Pokud paket dojde v pořádku je jeho obsah (naměřené hodnoty) překopírován do textového řetězce ve formátu JSON  odeslán jako TCP soket na veřejnou IP adresu jednoho ze servrů The Things Network.
+    
+     \question{Doplnit o popis JSON???}
+     
+     \answer{ano, ale jen relevatní informace}
+
+    \textit{JSON udává způsob zápisu dat, který je nezávislý na platformě a je v textové podobě. Struktura JSON je definována  množinou pravidel...}
+    
+    \question{Doplnit o obrázek algoritmu???}
+
+\answer{finální flowchart ano, asi stačí až po finálním rozběhnutí}
+
+
+  

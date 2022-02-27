@@ -1,0 +1,299 @@
+% arara: pdflatex: { synctex: yes }
+% arara: makeindex: { style: ctuthesis }
+% arara: bibtex
+
+% The class takes all the key=value arguments that \ctusetup does,
+% and a couple more: draft and oneside
+\documentclass[twoside]{template/ctuthesis}
+
+
+
+% Bibliography
+\usepackage[backend=biber, style=numeric]{biblatex}
+\addbibresource{ctutest.bib}
+
+% \DeclareSourcemap{
+%   \maps[datatype=bibtex]{
+%     \map[overwrite]{
+%       \step[fieldsource=keywords, match=\regexp{\A.+\Z}, final]
+%       \step[fieldset=keywords, fieldvalue={,hit}, append]
+%     }
+%     \map{
+%       \step[fieldset=keywords, fieldvalue={hit}]
+%     }
+%   }
+% }
+
+% \DeclareSourcemap{
+%   \maps[datatype=bibtex]{
+%     \map{
+%       \step[fieldsource=url, match=\regexp{github.com}]
+%     %   \step[fieldset=keywords, fieldvalue={$1}]
+%     }
+%   }
+% }
+
+% \printbibliography[heading=subbibliography, keyword=github.com, title={Github repositories}]
+
+
+\ctusetup{
+	preprint = \ctuverlog,
+	mainlanguage = english,
+	otherlanguages = {czech},
+	title-czech = {},
+	title-english = {Bluetooth Low Energy Remote Control of Active Lightning Systems},
+	doctype = M,
+	faculty = F3,
+	department-czech = {Katedra řídicí techniky},
+	department-english = {Department of Control Engineering},
+	author = {Ladislav Štefka},
+	supervisor = {Ing. Pavel Píša, Ph.D},
+	subfieldofstudy-english = {Cybernetics and Robotics},
+	subfieldofstudy-czech = {Kybernetika a Robotika},
+	keywords-czech = {},
+	day = 1,
+	month = ,
+	year = 2022,
+	specification-file = {},
+	front-specification = true,
+	ctulstbg = none,
+	%monochrome = true,
+%	savetoner = true,
+	%layout-short = true,
+	pkg-hyperref = true,
+	pkg-listings = true,
+}
+
+\ctuprocess
+
+\addto\ctucaptionsczech{%
+	\def\supervisorname{Vedoucí}%
+	\def\subfieldofstudyname{Studijní program}%
+}
+
+\ctutemplateset{maketitle twocolumn default}{
+	\begin{twocolumnfrontmatterpage}
+		\ctutemplate{twocolumn.thanks}
+		\ctutemplate{twocolumn.declaration}
+		\ctutemplate{twocolumn.abstract.in.titlelanguage}
+		\ctutemplate{twocolumn.abstract.in.secondlanguage}
+		\ctutemplate{twocolumn.tableofcontents}
+		\ctutemplate{twocolumn.listoffigures}
+	\end{twocolumnfrontmatterpage}
+}
+
+% Theorem declarations, this is the reasonable default, anybody can do what they wish.
+% If you prefer theorems in italics rather than slanted, use \theoremstyle{plainit}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\theoremstyle{note}
+\newtheorem*{remark*}{Remark}
+\newtheorem{remark}[theorem]{Remark}
+
+ \setlength{\parskip}{2ex plus 0.2ex minus 0.2ex}
+
+% Abstract in Czech
+\begin{abstract-czech}
+  ... 
+\end{abstract-czech}
+
+% Abstract in English
+\begin{abstract-english}
+...
+    
+\end{abstract-english}
+
+% Acknowledgements / Podekovani
+\begin{thanks}
+...
+\end{thanks}
+
+% Declaration / Prohlaseni
+\begin{declaration}
+  ...
+\end{declaration}
+
+% Only for testing purposes
+\listfiles
+\usepackage[pagewise]{lineno}
+\usepackage{lipsum,blindtext}
+\usepackage{mathrsfs} % provides \mathscr used in the ridiculous examples
+\usepackage{tabularx, array, booktabs} %notations
+
+\usepackage{siunitx}
+\usepackage{textcomp}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{makecell}
+\usepackage{multirow}
+\usepackage{tabulary}
+
+\usepackage{rotating}
+
+
+
+% ADDED: draw shapes 
+\usepackage{tikz,siunitx}
+\usetikzlibrary{shapes.geometric,shapes.symbols}
+\newcommand{\tikzcircle}[2][red,fill=red]{\tikz[baseline=-0.5ex]\draw[#1,radius=#2] (0,0) circle ;}%
+\newcommand{\tikzsymbol}[2][circle]{\tikz[baseline=-0.5ex]\node[inner sep=3pt,shape=#1,draw,#2]{};}%
+
+% ADDED: smaller capitals in table
+\usepackage{graphicx}
+\catcode`\"=13
+\def"#1"{\scalebox{0.8}[0.9]{#1}}
+
+
+
+
+\newcommand{\sss}[1]{\scalebox{0.9}[0.9]{#1}}
+\RenewDocumentCommand{\_}{}{\scalebox{0.5}[1]{\textunderscore}}
+
+% ADDED: itemize with title 
+\newenvironment{titleitemize}[1]{%
+    \paragraph{#1}
+    \setlength{\parskip}{0pt}
+    \begin{itemize}
+    \setlength\itemsep{0.15em}}
+    {\end{itemize}} 
+
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{TODO: #1}}\PackageWarning{TODO:}{#1!}}
+
+\newcommand{\question}[1]{\textcolor{blue}{\textbf{QUESTION: #1}}\PackageWarning{QUESTION:}{#1!}}
+
+\newcommand{\answer}[1]{\textcolor{magenta}{\textbf{ANSWER: #1}}\PackageWarning{ANSWER:}{#1!}}
+
+\begin{document}
+
+
+% \maketitle
+
+\input{01.INTRO/intro.tex}
+% \input{INTRO/stateofart.tex}
+% \input{LPWAN/lpwan.tex}
+% \input{DSP/dsp.tex}
+\input{URS/urs.tex}
+\input{02.HW/hw.tex}
+\input{SW_Firmware/sw_firmware.tex}
+% \input{Experiment/experiment.tex}
+% \input{Conclusion/conclusion.tex}
+
+
+\appendix
+% \printindex
+
+% \chapter{Additional Picture, Schemes, Charts}
+%     \begin{figure} [!h]
+%     	    \centering
+%     	    \includegraphics[ width =1.15\textwidth]{HW_PART/Figs/KICKAD/node.pdf}
+%             \caption {Schéma zapojení monitorovací jednotky.}
+%             \label{figure:scheme_01}
+%     \end{figure} 
+    
+%     \begin{figure} [!h]
+%     \label{figure:nodered_graphs}
+%     	    \centering
+%     	    \includegraphics[ width =1.2 \textwidth]{SW_PART/Figs/Node-RED/node_red_graphs_code.png}
+%             \caption {Node-RED flowchartový program pro obsluhu grafů.}
+%     \end{figure} 
+    
+%     \begin{sidewaysfigure}
+%         \centering
+%         \includegraphics[ width =\textwidth]{SW_PART/Figs/Node-RED/node_red_config_code.png}
+%         \caption {Node-RED flowchartový program pro obsluhu konfigurace.}
+%         \label{figure:nodered_graphs2}
+%     \end{sidewaysfigure}
+
+
+%     \begin{figure}[!ht]
+%         \centering
+% 	    \includegraphics[width =0.7\textwidth]{SW_PART/Figs/radio_packets.pdf}
+%         \caption {Přehled rádiových paketů použitých v aplikaci.}
+%         \label{figure:radio_packets}
+%     \end{figure} 
+
+%\appendix
+\chapter*{List of Shortcuts}
+
+\noindent
+\begin{tabularx}{\linewidth}
+  { l >{\raggedright\arraybackslash}X }
+\bfseries Shortcut & \bfseries Meaning \\\Midrule
+BLE & Bluetooth Low Energy \\
+% API & Application Programming Interface \\
+DMA & Direct Memory Access\\
+% GPIO & General Purpose Input Output \\
+% IIoT & Industrial Internet of Things\\
+% IoT & Internet of Things\\
+% ISM  & Industrial, Scientific and Medical\\
+% $\text{I}^2\text{C}$ & Inter-Integrated Circuit\\
+% LNA &Low Noise Amplifier \\
+MCU & Microcontroller \\
+SEPIC & Single-Ended Primary Inductor Convertor \\
+RFID & Radio Frequency IDentification \\
+ADC & Analog-to-Digitial Convertor \\
+RAM & Randim Access Memory \\
+RISC & Reduced Instruction Set Computer \\
+RTC & Real Time Clock\\
+SPI & Serial Peripheral Interface\\
+PPI  & Programmable Peripheral Interconnect \\
+UART & Universal Asynchronous Receiver/Transmitter \\
+OTA & Over The Air \\
+BSP & Board Support Package \\
+SDK & Software Development Kit \\
+ISR & Interrupt Service Routine \\
+IRQ & Interrupt ReQuest\\
+LSB & Least Significant Bit \\
+CRC & Cyclic Redundancy Check \\
+Bluetooth SIG & Bluetooth Special Interest Group\\
+TTL & Transistor–Transistor Logic \\
+PDU & Protocol Data Unit \\
+AD & Advertising Data\\
+MTU & Maximum Transmission Unit\\
+LTK & Long Term Key\\ 
+STK & Short Term Key\\
+GAP & Generic Access Profile\\
+GATT & Generic ATTribute profile\\
+\end{tabularx}
+
+
+% PA  & Power Amplifier \\
+% PLL & Phase-Locked Loop \\
+% REST & REpresentational State Transfer \\
+% RMS & Root Mean Square\\
+% RSSI & Received Signal Strength Indication \\
+% SNR & Signal to Noise Ratio \\
+% SQL & Structured Query Language \\
+
+% TBM & Time Based Maintenance \\
+% UDP & User Datagram Protocol\\
+% UUID & Universally Unique IDentifier \\
+
+
+
+\printbibliography[keyword=primary, title=Bibliography]
+\printbibliography[keyword=image, title=Online Images]
+
+% \bibliographystyle{siam}
+% \bibliography{ctutest}
+
+
+
+
+% \chapter{CD}
+
+
+
+
+%\ctutemplate{specification.as.chapter}
+
+\end{document}

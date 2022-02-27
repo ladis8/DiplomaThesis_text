@@ -1,0 +1,35 @@
+\chapter{Bluetooth Low Energy}
+
+
+\subsection{OTA Upgrade}
+% https://www.novelbits.io/ota-device-firmware-update-part-1/
+
+
+\chapter{RFID}
+
+
+
+\subsection{Advertising}
+The shorter the advertising interval, the more power is consumed by the device, since the radio has to wake up more frequently to send out advertisement packets.
+Shorter advertising intervals come with the advantage that discoveries and hence connections are faster. So, one has to strike a balance between a short enough advertising interval to satisfy a good enough discovery and connection speed while still achieving the desired power consumption level.
+If customizable via the SDK in use, advertising on all three primary channels (37, 38, and 39) is the safest route to get your device discovered and connected to by another BLE device (since the scanning device will usually have to switch between the three advertising channels during the scanning process).
+In general, you do not want your device to advertise indefinitely, so make sure that a reasonable advertising timeout value is set. You could also trigger advertising via a timer that expires every so often or via user interaction (e.g. click of a button on the device).
+If you are developing a peripheral or broadcaster device that users will interact with via an iOS device, then make sure to check out the guidelines recommended by Apple in section 35 of the following guide:
+
+% https://www.novelbits.io/bluetooth-low-energy-advertisements-part-2/
+
+
+% https://www.priority1design.com.au/em4100_protocol.html
+
+
+
+\subsection{Connection Parameters}
+The maximum connection interval (connInterval) is 4 s.
+The maximum supervision timeout (connSupervisionTimeout) is 32 s.
+The slave latency (connSlaveLatency) shall be less than 500, and it shall not exceed ((connSupervisionTimeout / (connInterval*2)) -1).
+This gives:
+
+connSlaveLatency ≤ ((connSupervisionTimeout / (connInterval*2)) -1)
+connSupervisionTimeout ≥ (connInterval * 2 * (connSlaveLatency + 1))
+
+% https://devzone.nordicsemi.com/f/nordic-q-a/8429/how-can-the-peripheral-slave-sleep-as-much-as-possible
